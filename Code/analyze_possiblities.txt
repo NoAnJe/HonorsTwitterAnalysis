@@ -1,0 +1,8 @@
+Questions that can be answered right now:
+    How many unique users are there?
+    What was the highest/average number of RT's and Likes?
+    What was the average number of replies?
+    How often were articles linked? Where were these articles from?
+
+Questions to think about:
+    Why was ACB (~55K Tweets) so much higher than RBG (~10K Tweets)?
