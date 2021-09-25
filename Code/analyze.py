@@ -45,7 +45,7 @@ def analyze_tweet(tweet, nameRef):
                 full_date_str.split('T')[1].split(':')[0]
     data[nameRef][ref_str]["TotalTweets"] = data[nameRef][ref_str]["TotalTweets"] + 1
     data[nameRef][ref_str]["TotalLikes"] = data[nameRef][ref_str]["TotalLikes"] + tweet["public_metrics"]["like_count"]
-    data[nameRef][ref_str]["TotalRTs"] = data[nameRef][ref_str]["TotalRts"] + tweet["public_metrics"]["retweet_count"]
+    data[nameRef][ref_str]["TotalRts"] = data[nameRef][ref_str]["TotalRts"] + tweet["public_metrics"]["retweet_count"]
 
 def summarize_tweets():
     for name in dataRef:

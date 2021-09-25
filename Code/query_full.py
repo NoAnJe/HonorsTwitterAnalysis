@@ -90,13 +90,16 @@ def main():
             # With limitations on search size, must limit to searching less than 3 seconds
             sleep(3)
 
-        os.chdir("..")
+        # Put the next set of data in the appropriate directory
+        os.chdir("../CONVERSATIONS")
         
+        # Do the same backwards search as before, but instead, getting the data for all of the conversation IDs
         for conv_id in conversation_ids:
             query_params = {'conversation_id': conv_id, 'tweet.fields': tweet_fields, 'max_results': '500'}
             json_response = connect_to_endpoint(search_url, query_params)
     
             filename = file_start+"_"+conv_id+".json"
+        os.chdir("..")
 
 if __name__ == "__main__":
     main()
