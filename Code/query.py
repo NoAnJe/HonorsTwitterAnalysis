@@ -51,8 +51,6 @@ def main():
 
     os.chdir('../Data')
 
-    conversation_ids = []
-
     # Loop until entire date/time set run
     while ('2020-09-01T00:00' not in end_time) and (': {' not in end_time):
         # Combine the entire request
@@ -73,8 +71,6 @@ def main():
 
         # With limitations on search size, must limit to searching less than 3 seconds
         sleep(3)
-    
-    for conv_id in conversation_ids:
 
 if __name__ == "__main__":
     main()

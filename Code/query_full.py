@@ -95,10 +95,11 @@ def main():
         
         # Do the same backwards search as before, but instead, getting the data for all of the conversation IDs
         for conv_id in conversation_ids:
-            query_params = {'conversation_id': conv_id, 'tweet.fields': tweet_fields, 'max_results': '500'}
+            query_params = {'query': 'conversation_id:'+str(conv_id), 'tweet.fields': tweet_fields, 'max_results': '500'}
             json_response = connect_to_endpoint(search_url, query_params)
-    
-            filename = file_start+"_"+conv_id+".json"
+            filename = file_start+"_"+str(conv_id)+".json"
+            with open(filename, 'w') as json_file:
+                json_file.write(json.dumps(json_response, indent=4, sort_keys=True))
         os.chdir("..")
 
 if __name__ == "__main__":

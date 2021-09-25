@@ -58,6 +58,12 @@ def plot_data(index, date, acb, rbg, scotus, title, y_label, save):
 def main():
     directory = sys.argv[1]
     file = sys.argv[2]
+    prefix = ["", ""]
+    try:
+        prefix = [sys.argv[3]+"Total", sys.argv[3]+"Avg"]
+    except:
+        prefix = ["total", "avg"]
+
     # Scan through every file in the directory... including name parsing
     cwd = os.getcwd()
     os.chdir(directory)
@@ -75,22 +81,22 @@ def main():
         os.chdir("../Data/Graphs")
         plot_data(0, dates, acb_data, rbg_data, scotus_data,
             "Total Tweet Comparison", "Number of Tweets",
-            "totalTweetsDaily.png")
+            prefix[0] + "TweetsDaily.png")
         plot_data(1, dates, acb_data, rbg_data, scotus_data,
             "Average Like Comparison", "Avg Number of Likes",
-            "avgLikesDaily.png")
+            prefix[1] + "LikesDaily.png")
         plot_data(2, dates, acb_data, rbg_data, scotus_data,
             "Average ReTweet Comparison", "Avg Number of ReTweets",
-            "avgRtsDaily.png")
+            prefix[1] + "RtsDaily.png")
         plot_data(0, datesHr, acb_hr_data, rbg_hr_data, scotus_hr_data,
             "Total Tweet Comparison", "Number of Tweets",
-            "totalTweetsHour.png")
+            prefix[0] + "TweetsHour.png")
         plot_data(1, datesHr, acb_hr_data, rbg_hr_data, scotus_hr_data,
             "Average Like Comparison", "Avg Number of Likes",
-            "avgLikesHour.png")
+            prefix[1] + "LikesHour.png")
         plot_data(2, datesHr, acb_hr_data, rbg_hr_data, scotus_hr_data,
             "Average ReTweet Comparison", "Avg Number of ReTweets",
-            "avgRtsHour.png")
+            prefix[1] + "RtsHour.png")
 
 if __name__ == "__main__":
     main()
