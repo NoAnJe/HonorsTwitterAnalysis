@@ -48,6 +48,7 @@ def connect_to_endpoint(url, params):
 
 
 def main():
+    i = 0
     # Set the appropriate times
     start_time = '2020-09-01T00:00:00Z' # Inclusive
     end_time = '2020-11-01T00:00:00Z'   # Exclusive
@@ -56,7 +57,9 @@ def main():
 
     for file_start, querystr in zip(file_str, query_str):
         conversation_ids = []
+        relative_ids = {}
         os.chdir("INITIAL_SEARCH")
+        print("Starting on all Tweets in " + file_start)
     
         # Loop until entire date/time set run
         while ('2020-09-01T00:00' not in end_time) and (': {' not in end_time):
@@ -77,30 +80,32 @@ def main():
             end_time = json.dumps(json_response, indent=4, sort_keys=True).split("created_at")[end_time_size-1].split('\"')[2].split('.')[0] + 'Z'
     
             # Get all of the conversation IDs - if it's already in the list of IDs, ignore it
-            data = json.loads(json_response)
-            for tweet in data['data']:
-                conv_id = tweet['conversation_id']
-                if conversation_ids.count > 0:
-                    pos = bisect_left(conversation_ids, conv_id)
-                    if conversation_ids[pos] != conv_id:
-                        conversation_ids.insert(pos, conv_id)
-                else:
-                    conversation_ids.append(conv_id)
+            data = json_response
+            if 'data' in data.keys():
+                for tweet in data['data']:
+                    conv_id = tweet['conversation_id']
+                    if ((conv_id != tweet['id']) or (tweet["public_metrics"]["reply_count"] > 0)):
+                        if (conv_id not in relative_ids.keys()):
+                            relative_ids[conv_id] = tweet['id']
 
             # With limitations on search size, must limit to searching less than 3 seconds
             sleep(3)
 
         # Put the next set of data in the appropriate directory
         os.chdir("../CONVERSATIONS")
+        print("Moving onto conversations in " + file_start)
         
         # Do the same backwards search as before, but instead, getting the data for all of the conversation IDs
-        for conv_id in conversation_ids:
+        for conv_id in relative_ids.keys():
             query_params = {'query': 'conversation_id:'+str(conv_id), 'tweet.fields': tweet_fields, 'max_results': '500'}
             json_response = connect_to_endpoint(search_url, query_params)
+            json_response['initial_id'] = relative_ids[conv_id]
             filename = file_start+"_"+str(conv_id)+".json"
             with open(filename, 'w') as json_file:
                 json_file.write(json.dumps(json_response, indent=4, sort_keys=True))
+            sleep(3)
         os.chdir("..")
+        print("Done with conversations in " + file_start)
 
 if __name__ == "__main__":
     main()

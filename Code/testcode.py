@@ -41,6 +41,7 @@ def main():
     conv_id = 1441809772504752138
     query_params = {'query': 'conversation_id:'+str(conv_id), 'tweet.fields': tweet_fields, 'max_results': '500'}
     json_response = connect_to_endpoint(search_url, query_params)
+    json_response['initial_id'] = "1234567890"
 
     # Set up the file
     filename = "testdata.json"
