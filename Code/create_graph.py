@@ -16,10 +16,10 @@ for date in range(1,31):
 for date in range(1,32):
     dates.append("10"+str(date).zfill(2))
 
-# [TOTAL_TWEETS, AVG_LIKES, AVG_RTS]
-acb_data = [[None]*61, [None]*61, [None]*61]
-rbg_data = [[None]*61, [None]*61, [None]*61]
-scotus_data = [[None]*61, [None]*61, [None]*61]
+# [TOTAL_TWEETS, AVG_LIKES, AVG_RTS, AVG_SENT]
+acb_data =    [[None]*61, [None]*61, [None]*61, [None]*61, [None]*61]
+rbg_data =    [[None]*61, [None]*61, [None]*61, [None]*61, [None]*61]
+scotus_data = [[None]*61, [None]*61, [None]*61, [None]*61, [None]*61]
 
 # Same thing, but on an hourly basis
 datesHr = []
@@ -30,9 +30,9 @@ for date in range(1,32):
     for hour in range(0,24):
         datesHr.append("10"+str(date).zfill(2)+str(hour).zfill(2))
 
-acb_hr_data =    [[None]*61*24, [None]*61*24, [None]*61*24]
-rbg_hr_data =    [[None]*61*24, [None]*61*24, [None]*61*24]
-scotus_hr_data = [[None]*61*24, [None]*61*24, [None]*61*24]
+acb_hr_data =    [[None]*61*24, [None]*61*24, [None]*61*24, [None]*61*24, [None]*61*24]
+rbg_hr_data =    [[None]*61*24, [None]*61*24, [None]*61*24, [None]*61*24, [None]*61*24]
+scotus_hr_data = [[None]*61*24, [None]*61*24, [None]*61*24, [None]*61*24, [None]*61*24]
 
 # Compile the data into the format for the graphing
 def compile_data(json_data, final_arr, date):
@@ -41,6 +41,8 @@ def compile_data(json_data, final_arr, date):
         final_arr[0][index] = json_data[day]["TotalTweets"]
         final_arr[1][index] = json_data[day]["AvgLikes"]
         final_arr[2][index] = json_data[day]["AvgRts"]
+        final_arr[3][index] = json_data[day]["AvgSent"]
+        final_arr[4][index] = json_data[day]["AvgSubj"]
 
 # Plot the data against each other
 def plot_data(index, date, acb, rbg, scotus, title, y_label, save):
@@ -79,6 +81,8 @@ def main():
             compile_data(json_obj[dataRef[2]], scotus_hr_data, datesHr)
         os.chdir(cwd)
         os.chdir("../Data/Graphs")
+
+        # First, plot out the daily data
         plot_data(0, dates, acb_data, rbg_data, scotus_data,
             "Total Tweet Comparison", "Number of Tweets",
             prefix[0] + "TweetsDaily.png")
@@ -88,15 +92,29 @@ def main():
         plot_data(2, dates, acb_data, rbg_data, scotus_data,
             "Average ReTweet Comparison", "Avg Number of ReTweets",
             prefix[1] + "RtsDaily.png")
+        plot_data(3, dates, acb_data, rbg_data, scotus_data,
+            "Average Sentiment Comparison", "Avg Sentiment",
+            prefix[1] + "SentimentDaily.png")
+        plot_data(4, dates, acb_data, rbg_data, scotus_data,
+            "Average Subjectivity Comparison", "Avg Subjectivity",
+            prefix[1] + "SubjectivityDaily.png")
+
+        # Secondly, plot out the hourly data
         plot_data(0, datesHr, acb_hr_data, rbg_hr_data, scotus_hr_data,
             "Total Tweet Comparison", "Number of Tweets",
-            prefix[0] + "TweetsHour.png")
+            prefix[0] + "TweetsHourly.png")
         plot_data(1, datesHr, acb_hr_data, rbg_hr_data, scotus_hr_data,
             "Average Like Comparison", "Avg Number of Likes",
-            prefix[1] + "LikesHour.png")
+            prefix[1] + "LikesHourly.png")
         plot_data(2, datesHr, acb_hr_data, rbg_hr_data, scotus_hr_data,
             "Average ReTweet Comparison", "Avg Number of ReTweets",
-            prefix[1] + "RtsHour.png")
+            prefix[1] + "RtsHourly.png")
+        plot_data(3, datesHr, acb_hr_data, rbg_hr_data, scotus_hr_data,
+            "Average Sentiment Comparison", "Avg Sentiment",
+            prefix[1] + "SentimentHourly.png")
+        plot_data(4, datesHr, acb_hr_data, rbg_hr_data, scotus_hr_data,
+            "Average Subjectivity Comparison", "Avg Subjectivity",
+            prefix[1] + "SubjectivityHourly.png")
 
 if __name__ == "__main__":
     main()

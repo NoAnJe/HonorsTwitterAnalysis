@@ -12,24 +12,24 @@ for day in range(1,31):
         for name in dataRef:
             data[name]["09"+str(day).zfill(2)+str(hour).zfill(2)]= {
                 "TotalTweets": 0, "TotalLikes": 0, "AvgLikes": 0, "TotalRts": 0,
-                "AvgRts": 0, "SentimentTotal": 0, "AvgSentiment": 0}
+                "AvgRts": 0, "TotalSent": 0, "AvgSent": 0, "TotalSubj": 0, "AvgSubj": 0}
 for day in range(1,32):
     for hour in range(0,24):
         for name in dataRef:
             data[name]["10"+str(day).zfill(2)+str(hour).zfill(2)]= {
                 "TotalTweets": 0, "TotalLikes": 0, "AvgLikes": 0, "TotalRts": 0,
-                "AvgRts": 0, "SentimentTotal": 0, "AvgSentiment": 0}
+                "AvgRts": 0, "TotalSent": 0, "AvgSent": 0, "TotalSubj": 0, "AvgSubj": 0}
 
 for day in range(1,31):
     for name in dataDayRef:
         data[name]["09"+str(day).zfill(2)] = {
             "TotalTweets": 0, "TotalLikes": 0, "AvgLikes": 0, "TotalRts": 0,
-            "AvgRts": 0, "SentimentTotal": 0, "AvgSentiment": 0}
+            "AvgRts": 0, "TotalSent": 0, "AvgSent": 0, "TotalSubj": 0, "AvgSubj": 0}
 for day in range(1,32):
     for name in dataDayRef:
         data[name]["10"+str(day).zfill(2)] = {
             "TotalTweets": 0, "TotalLikes": 0, "AvgLikes": 0, "TotalRts": 0,
-            "AvgRts": 0, "SentimentTotal": 0, "AvgSentiment": 0}
+            "AvgRts": 0, "TotalSent": 0, "AvgSent": 0, "TotalSubj": 0, "AvgSubj": 0}
 
 # Save the data to a file
 def output_data():
@@ -46,6 +46,9 @@ def analyze_tweet(tweet, nameRef):
     data[nameRef][ref_str]["TotalTweets"] = data[nameRef][ref_str]["TotalTweets"] + 1
     data[nameRef][ref_str]["TotalLikes"] = data[nameRef][ref_str]["TotalLikes"] + tweet["public_metrics"]["like_count"]
     data[nameRef][ref_str]["TotalRts"] = data[nameRef][ref_str]["TotalRts"] + tweet["public_metrics"]["retweet_count"]
+    data[nameRef][ref_str]["TotalSent"] = data[nameRef][ref_str]["TotalSent"] + tweet["sentiment"]
+    data[nameRef][ref_str]["TotalSubj"] = data[nameRef][ref_str]["TotalSubj"] + tweet["subjectivity"]
+
 
 def summarize_tweets():
     for name in dataRef:
@@ -53,6 +56,8 @@ def summarize_tweets():
             if (data[name][ref]["TotalTweets"] != 0):
                 data[name][ref]["AvgLikes"] = data[name][ref]["TotalLikes"] / data[name][ref]["TotalTweets"]
                 data[name][ref]["AvgRts"] = data[name][ref]["TotalRts"] / data[name][ref]["TotalTweets"]
+                data[name][ref]["AvgSent"] = data[name][ref]["TotalSent"] / data[name][ref]["TotalTweets"]
+                data[name][ref]["AvgSubj"] = data[name][ref]["TotalSubj"] / data[name][ref]["TotalTweets"]
     for name in dataRef:
         nameDay = name + "_DAY"
         for ref in data[nameDay]:
@@ -61,9 +66,13 @@ def summarize_tweets():
                 data[nameDay][ref]["TotalTweets"] = data[nameDay][ref]["TotalTweets"]+data[name][hr_refstr]["TotalTweets"]
                 data[nameDay][ref]["TotalLikes"] = data[nameDay][ref]["TotalLikes"]+data[name][hr_refstr]["TotalLikes"]
                 data[nameDay][ref]["TotalRts"] = data[nameDay][ref]["TotalRts"]+data[name][hr_refstr]["TotalRts"]
+                data[nameDay][ref]["TotalSent"] = data[nameDay][ref]["TotalSent"]+data[name][hr_refstr]["TotalSent"]
+                data[nameDay][ref]["TotalSubj"] = data[nameDay][ref]["TotalSubj"]+data[name][hr_refstr]["TotalSubj"]
             if (data[nameDay][ref]["TotalTweets"] != 0):
                 data[nameDay][ref]["AvgLikes"] = data[nameDay][ref]["TotalLikes"] / data[nameDay][ref]["TotalTweets"]
                 data[nameDay][ref]["AvgRts"] = data[nameDay][ref]["TotalRts"] / data[nameDay][ref]["TotalTweets"]
+                data[nameDay][ref]["AvgSent"] = data[nameDay][ref]["TotalSent"] / data[nameDay][ref]["TotalTweets"]
+                data[nameDay][ref]["AvgSubj"] = data[nameDay][ref]["TotalSubj"] / data[nameDay][ref]["TotalTweets"]
 
 def main():
     directory = sys.argv[1]
@@ -77,7 +86,7 @@ def main():
             ref_name = dataRef[0]
         elif dataRef[1] in filename:
             ref_name = dataRef[1]
-        elif dataRef[2] in filename:
+        elif (dataRef[2] in filename) or ('SC' in filename):
             ref_name = dataRef[2]
         else:
             continue
