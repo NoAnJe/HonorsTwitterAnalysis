@@ -4,8 +4,10 @@ import json
 from textblob import TextBlob
 
 def main():
+    directory = sys.argv[1]
+    cwd = os.getcwd()
     # Analyze each file
-    os.chdir('../Data/INITIAL_SEARCH')
+    os.chdir(directory)
     filelist = [f for f in os.listdir('.') if '.json' in f]
     for filename in filelist:
         # file_prefix = filename.split('.')[0]
@@ -21,10 +23,12 @@ def main():
             tweet['subjectivity'] = tweet_textblob.sentiment.subjectivity
         
         # Write to a new file
-        os.chdir('../SENTIMENT_TWEETS')
+        os.chdir(cwd)
+        os.chdir('../Data/Graphs')
         with open(filename, 'w') as write_file:
             write_file.write(json.dumps(json_data, indent=4, sort_keys=True))
-        os.chdir('../INITIAL_SEARCH')
+        os.chdir(cwd)
+        os.chdir(directory)
 
 if __name__ == "__main__":
     main()

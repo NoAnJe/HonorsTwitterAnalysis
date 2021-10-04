@@ -16,7 +16,7 @@ def main():
         if conv_id in conv_ids['conv_ids']:
             with open(filename, 'r') as curr_conv:
                 curr_conv_json = json.load(curr_conv)
-                if 'next_token' in curr_conv_json['meta'].keys():
+                if 'next_token' not in curr_conv_json['meta'].keys():
                     conv_ids['conv_ids'].remove(conv_id)
                     conv_ids['init_tweets'].pop(conv_id)
     os.chdir('..')
