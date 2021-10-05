@@ -126,7 +126,7 @@ def get_conversations():
     # Load in the file
     with open("conv_ids.json", 'r') as conv_id_file:
         json_obj = json.load(conv_id_file)
-        os.chdir("CONVERSATIONS_1PG")
+        os.chdir("CONVERSATIONS")
 
         for conv_id in json_obj['conv_ids']:
             # Query for the conversation - this will follow a similar format
@@ -165,7 +165,6 @@ def get_next_page_conv():
     os.chdir("../Data")
     i = 0
     num_tweets = 0
-    conv_ids_updated = []
 
     # Load in the file
     with open("conv_ids.json", 'r') as conv_id_file:
@@ -173,7 +172,7 @@ def get_next_page_conv():
         num_convs = len(json_obj['conv_ids'])
         print("Updating ~" + str(num_convs) + " conversations")
         step = num_convs // 100
-        os.chdir("CONVERSATIONS_1PG")
+        os.chdir("CONVERSATIONS")
 
         for conv_id in json_obj['conv_ids']:
             json_response = {}
@@ -184,7 +183,6 @@ def get_next_page_conv():
             # to before, as there are a great many conversations which are also
             # quite long / have hundreds of replies.
             conv_str = f'conversation_id:{conv_id}'
-            # print(filename)
             query_params = {'query': conv_str,
                             'tweet.fields': tweet_fields,
                             'start_time': '2020-08-01T00:00:00Z',
@@ -209,8 +207,6 @@ def get_next_page_conv():
             sleep(3)
 
             if error == 1:
-                with open("updated_conv_ids.json", w) as updated_conv_id_file:
-                    updated_conv_id_file.write(json.dumps({'updated_ids': conv_ids_updated}, indent=4, sort_keys=True))
                 print("Continues to fail; quitting now")
                 break
 
@@ -227,10 +223,9 @@ def get_next_page_conv():
             json_response['meta']['newest_id'] = json_response_tmp['meta']['newest_id']
 
             # Write the file with the entire tree
-            num_tweets = num_tweets + json_response['meta']['result_count']
+            num_tweets = num_tweets + json_response_tmp['meta']['result_count']
             with open(filename, 'w') as json_file:
                 json_file.write(json.dumps(json_response, indent=4, sort_keys=True))
-                conv_ids_updated.append(conv_id)
             
             # Print progress to terminal
             i = i + 1

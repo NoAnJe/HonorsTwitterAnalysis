@@ -9,7 +9,7 @@ def main():
     conv_ids = {}
     with open('conv_ids_tmp.json', 'r') as conv_id_tmp_file:
         conv_ids = json.load(conv_id_tmp_file)
-    os.chdir('CONVERSATIONS_1PG')
+    os.chdir('CONVERSATIONS')
     filelist = [f for f in os.listdir('.') if '.json' in f]
     for filename in filelist:
         conv_id = filename.split('_')[1].split('.')[0]
