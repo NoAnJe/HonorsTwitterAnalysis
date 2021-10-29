@@ -1,6 +1,7 @@
 import requests
 import os
 import json
+import time
 from time import sleep
 from bisect import bisect_left
 import copy
@@ -165,6 +166,7 @@ def get_next_page_conv():
     os.chdir("../Data")
     i = 0
     num_tweets = 0
+    percent = 0
 
     # Load in the file
     with open("conv_ids.json", 'r') as conv_id_file:
@@ -173,6 +175,7 @@ def get_next_page_conv():
         print("Updating ~" + str(num_convs) + " conversations")
         step = num_convs // 100
         os.chdir("CONVERSATIONS")
+        start = time.time()
 
         for conv_id in json_obj['conv_ids']:
             json_response = {}
@@ -190,7 +193,7 @@ def get_next_page_conv():
                             'next_token':json_response['meta']['next_token']}
             success = 0
             json_response_tmp = {}
-            error = 0
+            error = False
             errorCount = 0
             while success != 1:
                 try:
@@ -200,13 +203,13 @@ def get_next_page_conv():
                     errorCount = errorCount + 1
                     print(e)
                     if errorCount > 10:
-                        error = 1
+                        error = True
                         break
                     print("Trying again in 10 seconds")
                     sleep(10)
             sleep(3)
 
-            if error == 1:
+            if error:
                 print("Continues to fail; quitting now")
                 break
 
@@ -229,8 +232,15 @@ def get_next_page_conv():
             
             # Print progress to terminal
             i = i + 1
-            if (i % step == 0):
-                print(str((i / num_convs) * 100) + '%')
+            if ((i // step) > percent):
+                percent = i // step
+                totalTime = time.time() - start
+                estTimeTotal = totalTime * (100 / percent)
+                estTimeRemaining = int(estTimeTotal - totalTime)
+                estHrs = int(estTimeRemaining // 3600)
+                estMins = int((estTimeRemaining % 3600) // 60)
+                estSecs = int((estTimeRemaining % 3600) % 60)
+                print(str(percent) + "%, approximately " + str(estHrs) + ":" + str(estMins) + ":" + str(estSecs) + " remaining")
     print("Total Tweets gathered: " + str(num_tweets))
 
 def main():

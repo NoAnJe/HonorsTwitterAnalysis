@@ -1,0 +1,12 @@
+Conversation Querying:
+0) Move all incomplete conversations to separate folder (which also makes updating incomplete list faster)
+1) Resume querying on Oct 19
+
+Converation Analysis:
+0) Reverse each tree
+1) Assign each conversation with the search terms (ACB, RBG, or SCOTUS) that it came with
+2) For each conversation, analyze each Tweet in regards to sentiment
+3) For each conversation, create an overall unweighted and weighted average for the sentiment
+4) For all conversations in each search term, create an unweighted and weighted average and std deviation (σ) sentiment value
+5) For conversations by size in each term, create an unweighted and weighted average & σ sentiment value
+6) Classify conversations by average and σ length of time from initial post to final post
