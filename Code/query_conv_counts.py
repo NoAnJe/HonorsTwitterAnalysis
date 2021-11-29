@@ -37,12 +37,16 @@ def remaining():
     count_data['uncollected'] = {}
     os.chdir('CONVERSATIONS')
     total_remaining = 0
+    filelist = [f for f in os.listdir('.') if '.json' in f]
+    # for filename in filelist:
+    #     conv_id = 
     for conv_id in count_data['conv_ids']:
         filename = 'conv_' +  conv_id + '.json'
-        with open(filename, 'r') as curr_file:
-            tweet_data = json.load(curr_file)
-            count_data['uncollected'][conv_id] = count_data['counts'][conv_id] - tweet_data['meta']['result_count']
-            total_remaining += count_data['uncollected'][conv_id]
+        if filename in filelist:
+            with open(filename, 'r') as curr_file:
+                tweet_data = json.load(curr_file)
+                count_data['uncollected'][conv_id] = count_data['counts'][conv_id] - tweet_data['meta']['result_count']
+                total_remaining += count_data['uncollected'][conv_id]
     print('Total Tweets Remaining: ' + str(total_remaining))
     os.chdir('..')
     with open('conv_ids_count.json', 'w') as counts_file:

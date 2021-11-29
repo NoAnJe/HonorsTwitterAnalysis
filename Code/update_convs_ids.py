@@ -2,9 +2,10 @@ import sys
 import os
 import json
 
-conv_id_data = {'conv_ids': [], 'init_tweets': {}}
 
-def main():
+
+def update_ids():
+    conv_id_data = {'conv_ids': [], 'init_tweets': {}}
     os.chdir('../Data')
     conv_ids = {}
     with open('conv_ids_tmp.json', 'r') as conv_id_tmp_file:
@@ -29,4 +30,4 @@ def main():
         conv_id_file.write(json.dumps(conv_ids, indent=4, sort_keys=True))
 
 if __name__ == "__main__":
-    main()
+    update_ids()

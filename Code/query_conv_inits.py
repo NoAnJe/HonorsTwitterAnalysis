@@ -28,7 +28,7 @@ def connect_to_endpoint(url):
 def main():
     start = time.time()
     # os.chdir('../Data/CONVERSATIONS/TEMP')
-    os.chdir('../Data/CONV_COMPLETE')
+    os.chdir('../Data/Graphs')
     filelist = [f for f in os.listdir('.') if '.json' in f]
     total_convs = len(filelist)
     step = total_convs // 100
@@ -79,15 +79,15 @@ def main():
 
         sleep(3)
 
-        if ((i // step) > percent):
-            percent = i // step
-            totalTime = time.time() - start
-            estTimeTotal = totalTime * (100 / percent)
-            estTimeRemaining = int(estTimeTotal - totalTime)
-            estHrs = int(estTimeRemaining // 3600)
-            estMins = int((estTimeRemaining % 3600) // 60)
-            estSecs = int((estTimeRemaining % 3600) % 60)
-            print(str(percent) + "%, approximately " + str(estHrs) + ":" + str(estMins) + ":" + str(estSecs) + " remaining")
+        # if ((i // step) > percent):
+        #     percent = i // step
+        #     totalTime = time.time() - start
+        #     estTimeTotal = totalTime * (100 / percent)
+        #     estTimeRemaining = int(estTimeTotal - totalTime)
+        #     estHrs = int(estTimeRemaining // 3600)
+        #     estMins = int((estTimeRemaining % 3600) // 60)
+        #     estSecs = int((estTimeRemaining % 3600) % 60)
+        #     print(str(percent) + "%, approximately " + str(estHrs) + ":" + str(estMins) + ":" + str(estSecs) + " remaining")
     
     
 

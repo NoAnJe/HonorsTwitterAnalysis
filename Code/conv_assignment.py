@@ -53,12 +53,15 @@ def assign_tags(directory):
     for filename in filelist:
         conv_id = filename.split('_')[1].split('.')[0]
         conv_file_data = {}
-        with open(filename, 'r') as conv_file:
-            conv_file_data = json.load(conv_file)
-        conv_file_data['meta']['init_tags'] = convs[conv_id]
-        with open(filename, 'w') as conv_file:
-            conv_file(json.dumps(conv_file_data, indent=4, sort_keys=False))
-        
+        try:
+            with open(filename, 'r') as conv_file:
+                conv_file_data = json.load(conv_file)
+            conv_file_data['meta']['init_tags'] = convs[conv_id]
+            with open(filename, 'w') as conv_file:
+                conv_file.write(json.dumps(conv_file_data, indent=4, sort_keys=False))
+        except Exception as e:
+            print(filename)
+            print(e)
 
 def main():
     arg = sys.argv[1]

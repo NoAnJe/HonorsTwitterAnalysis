@@ -174,8 +174,13 @@ def get_next_page_conv():
         num_convs = len(json_obj['conv_ids'])
         print("Updating ~" + str(num_convs) + " conversations")
         step = num_convs // 100
+        if num_convs < 100:
+            step = 1
         os.chdir("CONVERSATIONS")
         start = time.time()
+        if (num_convs == 0):
+            print("No more conversations")
+            return -1
 
         for conv_id in json_obj['conv_ids']:
             json_response = {}
@@ -189,6 +194,7 @@ def get_next_page_conv():
             query_params = {'query': conv_str,
                             'tweet.fields': tweet_fields,
                             'start_time': '2020-08-01T00:00:00Z',
+                            'end_time': '2020-12-01T00:00:00Z', # can you add a new tag onto a conversation where the token is set?
                             'max_results': '500',
                             'next_token':json_response['meta']['next_token']}
             success = 0
@@ -211,7 +217,7 @@ def get_next_page_conv():
 
             if error:
                 print("Continues to fail; quitting now")
-                break
+                return -1
 
             if 'next_token' in json_response_tmp['meta'].keys():
                 json_response['meta']['next_token'] = json_response_tmp['meta']['next_token']
@@ -220,10 +226,11 @@ def get_next_page_conv():
 
             # # Loop until all pages have been grabbed and added to the dictionary
             # Copy over all of the tweets
-            for tweet in json_response_tmp['data']:
-                json_response['data'].append(tweet)
-            json_response['meta']['result_count'] = json_response['meta']['result_count'] + json_response_tmp['meta']['result_count']
-            json_response['meta']['newest_id'] = json_response_tmp['meta']['newest_id']
+            if (json_response_tmp['meta']['result_count'] > 0) and ('data' in json_response_tmp.keys()):
+                for tweet in json_response_tmp['data']:
+                    json_response['data'].append(tweet)
+                json_response['meta']['result_count'] = json_response['meta']['result_count'] + json_response_tmp['meta']['result_count']
+                json_response['meta']['newest_id'] = json_response_tmp['meta']['newest_id']
 
             # Write the file with the entire tree
             num_tweets = num_tweets + json_response_tmp['meta']['result_count']
@@ -242,6 +249,7 @@ def get_next_page_conv():
                 estSecs = int((estTimeRemaining % 3600) % 60)
                 print(str(percent) + "%, approximately " + str(estHrs) + ":" + str(estMins) + ":" + str(estSecs) + " remaining")
     print("Total Tweets gathered: " + str(num_tweets))
+    return 0
 
 def main():
     run_choice = sys.argv[1]
